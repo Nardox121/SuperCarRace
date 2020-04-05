@@ -3,7 +3,7 @@ import sys
 from math import copysign
 from Car import Car
 
-width = 512
+width = 1024
 height = 500
 pygame.init()
 clock = pygame.time.Clock()
