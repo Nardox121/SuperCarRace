@@ -12,10 +12,11 @@ car = Car(10, 10)
 clock = pygame.time.Clock()
 ticks = 60
 
-car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (35, 20))
+car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
 
 while True:
     dt = clock.get_time() / 500
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -56,7 +57,7 @@ while True:
     car.update(dt)
 
     ppu = 32
-    screen.fill((255, 255, 255))
+    screen.fill((80, 85, 80))
     rotated = pygame.transform.rotate(car_image, car.angle)
     rect = rotated.get_rect()
     screen.blit(rotated, car.position * ppu - (rect.width / 2, rect.height / 2))
