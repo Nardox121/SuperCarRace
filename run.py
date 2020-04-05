@@ -3,8 +3,8 @@ import sys
 from math import copysign
 from Car import Car
 
-width = 1280
-height = 720
+width = 512
+height = 500
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((width, height))
@@ -12,7 +12,7 @@ car = Car(10, 10)
 clock = pygame.time.Clock()
 ticks = 60
 
-car_image = pygame.transform.scale(pygame.image.load("Car.png"), (20, 20))
+car_image = pygame.transform.scale(pygame.image.load("Car.png"), (35, 20))
 
 while True:
     dt = clock.get_time() / 500
@@ -60,5 +60,6 @@ while True:
     rotated = pygame.transform.rotate(car_image, car.angle)
     rect = rotated.get_rect()
     screen.blit(rotated, car.position * ppu - (rect.width / 2, rect.height / 2))
+    #refresh window
     pygame.display.flip()
     clock.tick(ticks)
