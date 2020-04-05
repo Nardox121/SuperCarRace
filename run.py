@@ -12,7 +12,7 @@ car = Car(10, 10)
 clock = pygame.time.Clock()
 ticks = 60
 
-car_image = pygame.transform.scale(pygame.image.load("Car.png"), (35, 20))
+car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (35, 20))
 
 while True:
     dt = clock.get_time() / 500
