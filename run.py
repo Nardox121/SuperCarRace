@@ -15,7 +15,7 @@ ticks = 60
 car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
 
 while True:
-    dt = clock.get_time() / 500
+    dt = clock.get_time() / 300
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
