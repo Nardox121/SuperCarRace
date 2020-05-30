@@ -33,38 +33,35 @@ class Car:
     
     def move(self, dt, pressed, map):
         if pressed[pygame.K_UP]:
-            ###############################################################################
-            if self.collision(self.position, map) or self.collision(Vector2(self.position.x - 0.5, self.position.y), map):
-                if self.velocity.x < 0:
-                    self.acceleration = self.brake_deceleration
-                else:
-                    self.acceleration += 1 * dt
+            if self.velocity.x < 0:
+                self.acceleration = self.brake_deceleration
             else:
-                self.position = Vector2(self.startPosition.x, self.startPosition.y)
+                self.acceleration += 1 * dt
         elif pressed[pygame.K_DOWN]:
-            ##########################################################################
-            if self.collision(Vector2(self.position.x, self.position.y-self.length), map) or self.collision(Vector2(self.position.x - 0.5, self.position.y-self.length), map):
-                if self.velocity.x > 0:
-                    self.acceleration = -self.brake_deceleration
-                else:
-                    self.acceleration -= 1 * dt
+            if self.velocity.x > 0:
+                self.acceleration = -self.brake_deceleration
             else:
-                self.position = Vector2(self.startPosition.x, self.startPosition.y)
+                self.acceleration -= 1 * dt
         elif pressed[pygame.K_SPACE]:
             if abs(self.velocity.x) > dt * self.brake_deceleration:
                 self.acceleration = -copysign(self.brake_deceleration, self.velocity.x)
             else:
                 self.acceleration = -self.velocity.x / dt
         else:
-            ########################################################################################
-            if (self.collision(Vector2(self.position.x, self.position.y-self.length), map) or self.collision(Vector2(self.position.x, self.position.y-self.length), map)):
-                if abs(self.velocity.x) > dt * self.free_deceleration:
-                    self.acceleration = -copysign(self.free_deceleration, self.velocity.x)
-                else:
-                    if dt != 0:
-                        self.acceleration = -self.velocity.x / dt
+            if abs(self.velocity.x) > dt * self.free_deceleration:
+                self.acceleration = -copysign(self.free_deceleration, self.velocity.x)
             else:
-                self.position = Vector2(self.startPosition.x, self.startPosition.y)
+                if dt != 0:
+                    self.acceleration = -self.velocity.x / dt
+        self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
+
+        if pressed[pygame.K_RIGHT]:
+            self.steering -= 30 * dt
+        elif pressed[pygame.K_LEFT]:
+            self.steering += 30 * dt
+        else:
+            self.steering = 0
+        self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
 
                         
         self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
@@ -77,11 +74,9 @@ class Car:
             self.steering = 0
         self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
 
-    def collision(self, corner, map):
-        tmpCorner = (int(corner.x * 32), int(corner.y * 32))
-        
-        if tmpCorner in map:
-            print(self.length)
-            return False
-        else:
-            return True
+    def collision(self, rect, map):
+        carRec = pygame.Rect(self.position.x * 32, self.position.y * 32, 5, 5)
+        if(carRec.collidelist(map) > -1):
+            self.position.x, self.position.y = self.startPosition.x, self.startPosition.y
+            self.angle = 90
+            self.velocity = Vector2(0.0, 0.0)

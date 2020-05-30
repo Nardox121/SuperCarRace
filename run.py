@@ -9,7 +9,7 @@ height = 600
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((width, height))
-car = Car(5, 7)
+car = Car(8, 9)
 clock = pygame.time.Clock()
 ticks = 60
 
@@ -26,13 +26,14 @@ while True:
 
     pressed = pygame.key.get_pressed()
     
-    car.move(dt, pressed, gameMap.mapPiksels)
+    car.move(dt, pressed, gameMap.mapPixels)
     
     car.update(dt)
     
     gameMap.refresh(screen)
     rotated = pygame.transform.rotate(car_image, car.angle)
     rect = rotated.get_rect()
+    car.collision(rect, gameMap.rectMap)
     
     screen.blit(rotated, car.position * 32 - (int(rect.width / 2), int(rect.height / 2)))
     #refresh window
