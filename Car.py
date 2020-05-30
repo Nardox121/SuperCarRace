@@ -1,4 +1,5 @@
 import pygame, math
+from math import copysign
 from pygame.math import Vector2
 
 class Car:
@@ -28,3 +29,39 @@ class Car:
 
         self.position += self.velocity.rotate(-self.angle) * dt
         self.angle += math.degrees(angular_velocity) * dt
+    
+    def move(self, dt, pressed, map):
+        if pressed[pygame.K_UP]:
+            if self.collision(self.position, map):
+                if self.velocity.x < 0:
+                    self.acceleration = self.brake_deceleration
+                else:
+                    self.acceleration += 1 * dt
+        elif pressed[pygame.K_DOWN]:
+            if self.velocity.x > 0:
+                self.acceleration = -self.brake_deceleration
+            else:
+                self.acceleration -= 1 * dt
+        elif pressed[pygame.K_SPACE]:
+            if abs(self.velocity.x) > dt * self.brake_deceleration:
+                self.acceleration = -copysign(self.brake_deceleration, self.velocity.x)
+            else:
+                self.acceleration = -self.velocity.x / dt
+        else:
+            if abs(self.velocity.x) > dt * self.free_deceleration:
+                self.acceleration = -copysign(self.free_deceleration, self.velocity.x)
+            else:
+                if dt != 0:
+                    self.acceleration = -self.velocity.x / dt
+        self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
+
+        if pressed[pygame.K_RIGHT]:
+            self.steering -= 30 * dt
+        elif pressed[pygame.K_LEFT]:
+            self.steering += 30 * dt
+        else:
+            self.steering = 0
+        self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
+
+    def collision(self, corner, map):
+        return True
