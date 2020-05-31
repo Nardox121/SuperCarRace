@@ -63,7 +63,6 @@ class Car:
             self.steering = 0
         self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
 
-                        
         self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
 
         if pressed[pygame.K_RIGHT]:
