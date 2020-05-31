@@ -2,6 +2,7 @@ import pygame
 import sys
 from math import copysign
 from Car import Car
+from CarAI import CarAI
 from Map import Map
 
 width = 1024
@@ -9,12 +10,12 @@ height = 600
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((width, height))
-car = Car(8, 9)
 clock = pygame.time.Clock()
 ticks = 60
 
 path = "map.bmp"
 gameMap = Map(path)
+car = CarAI(8, 9, gameMap)
 car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
 
 while True:
@@ -29,6 +30,7 @@ while True:
     car.move(dt, pressed, gameMap.mapPixels)
     
     car.update(dt)
+    car.update_dist()
     
     gameMap.refresh(screen)
     rotated = pygame.transform.rotate(car_image, car.angle)
