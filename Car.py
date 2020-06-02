@@ -56,22 +56,14 @@ class Car:
         self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
 
         if pressed[pygame.K_RIGHT]:
-            self.steering -= 30 * dt
+            self.steering -= 45 * dt
         elif pressed[pygame.K_LEFT]:
-            self.steering += 30 * dt
+            self.steering += 45 * dt
         else:
             self.steering = 0
         self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
 
         self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
-
-        if pressed[pygame.K_RIGHT]:
-            self.steering -= 30 * dt
-        elif pressed[pygame.K_LEFT]:
-            self.steering += 30 * dt
-        else:
-            self.steering = 0
-        self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
 
     # def collision(self, rect, map):
     #     carRec = pygame.Rect(self.position.x * 32, self.position.y * 32, 5, 5)
