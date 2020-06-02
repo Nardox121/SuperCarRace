@@ -16,7 +16,7 @@ ticks = 60
 
 path = "map.bmp"
 gameMap = Map(path)
-car = CarAI(8, 9, gameMap)
+car = Car(4.5, 9)
 car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
 
 while True:

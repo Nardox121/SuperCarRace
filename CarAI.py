@@ -1,7 +1,7 @@
 import pygame, math
 from math import copysign
 from pygame.math import Vector2
-from Car import Car
+from Car import Car, Action
 
 class CarAI (Car):
     def __init__(self,x,y,m, angle = 90, length = 0.5, max_steering = 15, max_acceleration= 2.5):
@@ -43,33 +43,17 @@ class CarAI (Car):
         par = 0.5
         ######### UP #############
         if output[0] > par:
-            if self.velocity.x < 0:
-                self.acceleration = self.brake_deceleration
-            else:
-                self.acceleration += 1 * dt
+            self.takeAction(Action.Accelerate, dt)
         ######### DOWN ###########
         elif output[1] > par:
-            if self.velocity.x > 0:
-                self.acceleration = -self.brake_deceleration
-            else:
-                self.acceleration -= 1 * dt
+            self.takeAction(Action.Reverse, dt)
         else:
-            if abs(self.velocity.x) > dt * self.free_deceleration:
-                self.acceleration = -copysign(self.free_deceleration, self.velocity.x)
-            else:
-                if dt != 0:
-                    self.acceleration = -self.velocity.x / dt
-        self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
+            self.takeAction(Action.Decelerate, dt)
 
         ######## RIGHT & LEFT #########
         if output[2] > par:
-            self.steering -= 30 * dt
+            self.takeAction(Action.TurnRight, dt)
         elif output[3] > par:
-            self.steering += 30 * dt
+            self.takeAction(Action.TurnLeft, dt)
         else:
-            self.steering = 0
-        self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
-
-        self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
-
-
+            self.takeAction(Action.GoStraight, dt)

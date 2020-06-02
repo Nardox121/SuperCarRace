@@ -1,6 +1,7 @@
 import pygame, math
 from math import copysign
 from pygame.math import Vector2
+from enum import Enum
 
 class Car:
     def __init__(self, x, y, angle = 90, length = 0.5, max_steering = 15, max_acceleration= 2.5):
@@ -33,36 +34,49 @@ class Car:
     
     def move(self, dt, pressed):
         if pressed[pygame.K_UP]:
+            self.takeAction(Action.Accelerate, dt)
+        elif pressed[pygame.K_DOWN]:
+            self.takeAction(Action.Reverse, dt)
+        else:
+            self.takeAction(Action.Decelerate, dt)
+
+        if pressed[pygame.K_RIGHT]:
+            self.takeAction(Action.TurnRight, dt)
+        elif pressed[pygame.K_LEFT]:
+            self.takeAction(Action.TurnLeft, dt)
+        else:
+            self.takeAction(Action.GoStraight, dt)
+
+    def takeAction(self, action, dt):
+        if action == Action.Accelerate:
             if self.velocity.x < 0:
                 self.acceleration = self.brake_deceleration
             else:
                 self.acceleration += 1 * dt
-        elif pressed[pygame.K_DOWN]:
+
+        elif action == Action.Reverse:
             if self.velocity.x > 0:
                 self.acceleration = -self.brake_deceleration
             else:
                 self.acceleration -= 1 * dt
-        elif pressed[pygame.K_SPACE]:
-            if abs(self.velocity.x) > dt * self.brake_deceleration:
-                self.acceleration = -copysign(self.brake_deceleration, self.velocity.x)
-            else:
-                self.acceleration = -self.velocity.x / dt
-        else:
+
+        elif action == Action.Decelerate:
             if abs(self.velocity.x) > dt * self.free_deceleration:
                 self.acceleration = -copysign(self.free_deceleration, self.velocity.x)
             else:
                 if dt != 0:
                     self.acceleration = -self.velocity.x / dt
-        self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
-
-        if pressed[pygame.K_RIGHT]:
+        
+        elif action == Action.TurnRight:
             self.steering -= 45 * dt
-        elif pressed[pygame.K_LEFT]:
+        
+        elif action == Action.TurnLeft:
             self.steering += 45 * dt
-        else:
-            self.steering = 0
-        self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
 
+        elif action == Action.GoStraight:
+            self.steering = 0
+
+        self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
         self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
 
     # def collision(self, rect, map):
@@ -71,3 +85,11 @@ class Car:
     #         self.position.x, self.position.y = self.startPosition.x, self.startPosition.y
     #         self.angle = 90
     #         self.velocity = Vector2(0.0, 0.0)
+
+class Action(Enum):
+    Accelerate = 1
+    Decelerate = 2
+    Reverse = 3
+    TurnLeft = 4
+    TurnRight = 5
+    GoStraight = 6
