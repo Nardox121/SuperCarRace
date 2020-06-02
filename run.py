@@ -7,6 +7,7 @@ from Map import Map
 
 width = 1024
 height = 600
+pygame.display.set_caption("SuperCarRace")
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((width, height))
