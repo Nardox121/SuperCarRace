@@ -31,7 +31,7 @@ class Car:
         self.position += self.velocity.rotate(-self.angle) * dt
         self.angle += math.degrees(angular_velocity) * dt
     
-    def move(self, dt, pressed, map):
+    def move(self, dt, pressed):
         if pressed[pygame.K_UP]:
             if self.velocity.x < 0:
                 self.acceleration = self.brake_deceleration
@@ -73,9 +73,9 @@ class Car:
             self.steering = 0
         self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
 
-    def collision(self, rect, map):
-        carRec = pygame.Rect(self.position.x * 32, self.position.y * 32, 5, 5)
-        if(carRec.collidelist(map) > -1):
-            self.position.x, self.position.y = self.startPosition.x, self.startPosition.y
-            self.angle = 90
-            self.velocity = Vector2(0.0, 0.0)
+    # def collision(self, rect, map):
+    #     carRec = pygame.Rect(self.position.x * 32, self.position.y * 32, 5, 5)
+    #     if(carRec.collidelist(map) > -1):
+    #         self.position.x, self.position.y = self.startPosition.x, self.startPosition.y
+    #         self.angle = 90
+    #         self.velocity = Vector2(0.0, 0.0)

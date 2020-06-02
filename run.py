@@ -27,15 +27,15 @@ while True:
 
     pressed = pygame.key.get_pressed()
     
-    car.move(dt, pressed, gameMap.mapPixels)
+    car.move(dt, pressed)
     
     car.update(dt)
-    car.update_dist()
+    #car.update_dist()
     
     gameMap.refresh(screen)
     rotated = pygame.transform.rotate(car_image, car.angle)
     rect = rotated.get_rect()
-    car.collision(rect, gameMap.rectMap)
+    #car.collision(rect, gameMap.rectMap)
     
     screen.blit(rotated, car.position * 32 - (int(rect.width / 2), int(rect.height / 2)))
     #refresh window
