@@ -1,11 +1,13 @@
-import pygame
 import random
 import os
 import time
 import neat
-import pickle
-import CarAI
-import Map
+import pygame
+import sys
+from math import copysign
+from Car import Car
+from CarAI import CarAI
+from Map import Map
 
 def eval_genomes(genomes, config):
     """
@@ -25,8 +27,6 @@ def eval_genomes(genomes, config):
     car = CarAI(8, 9, gameMap)
     car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
     
-    gen += 1
-
     # start by creating lists holding the genome itself, the
     # neural network associated with the genome and the
     # bird object that uses that network to play
@@ -58,33 +58,33 @@ def eval_genomes(genomes, config):
 
         for x, car in enumerate(cars):  # give each bird a fitness of 0.1 for each frame it stays alive
             ge[x].fitness += 0.1
-            # send car position, distances from bbunds
-            output = nets[cars.index(car)].activate((PARAMETRY DO SIECI))
+            # send car position, distances from bounds
+            output = nets[cars.index(car)].activate((car.distances + [car.velocity.x ,car.velocity.y]))
             #output to tablica z 4 wyjściami który klawisz kliknąć
 
             # OUTPUT -> [up, down, right, left]
             car.move(dt, output)
             car.update(dt)
-            car.update_dist()
+            car.update_dist(screen)
 
         ##  v tu ma być dodawanie punktów, dodawanie fitnessu tylko nie wiem za co v    
-        if True:
+        '''if True:
             score += 1
             # can add this line to give more reward for passing through a pipe (not required)
             for genome in ge:
                 genome.fitness += 5
-
+        '''
 
         gameMap.refresh(screen)
 
         for car in cars:
-            if True:# jeśli auto umarło
+            if car.dead:# jeśli auto umarło
                 nets.pop(cars.index(car))
                 ge.pop(cars.index(car))
                 cars.pop(car.index(car))
             rotated = pygame.transform.rotate(car_image, car.angle)
             rect = rotated.get_rect()
-            car.collision(rect, gameMap.rectMap)
+            car.checkColliding(rect, gameMap.rectMap)
 
         ##  v tu ma być całe rysowanie mapy v
 

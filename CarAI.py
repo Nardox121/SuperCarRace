@@ -124,7 +124,7 @@ class CarAI (Car):
         return value / 200
     
 
-    """def move(self, dt, output):
+    def move(self, dt, output):
         par = 0.5
         ######### UP #############
         if output[0] > par:
@@ -141,4 +141,8 @@ class CarAI (Car):
         elif output[3] > par:
             self.takeAction(Action.TurnLeft, dt)
         else:
-            self.takeAction(Action.GoStraight, dt)"""
+            self.takeAction(Action.GoStraight, dt)
+
+    def checkColliding(self, rect):
+        if(self.isColliding(rect, map)):
+            self.dead = True
