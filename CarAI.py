@@ -143,6 +143,6 @@ class CarAI (Car):
         else:
             self.takeAction(Action.GoStraight, dt)
 
-    def checkColliding(self, rect):
-        if(self.isColliding(rect, map)):
+    def checkCollision(self, rect, gameMap):
+        if(self.isColliding(rect, gameMap)):
             self.dead = True
