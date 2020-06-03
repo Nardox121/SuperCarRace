@@ -6,7 +6,7 @@ from Map import MapTile
 from pygame import draw,color
 
 class CarAI (Car):
-    def __init__(self, x, y, m, angle = 90, length = 0.5, max_steering = 15, max_acceleration= 2.5):
+    def __init__(self, x, y, m, angle = -30, length = 0.5, max_steering = 15, max_acceleration= 2.5):
         self.startPosition = Vector2(x, y)
         self.position = Vector2(self.startPosition.x, self.startPosition.y)
         self.velocity = Vector2(0.0, 0.0)
@@ -125,9 +125,8 @@ class CarAI (Car):
             val=200
         val/=200
         return val
-    
 
-    """def move(self, dt, output):
+    def move(self, dt, output):
         par = 0.5
         ######### UP #############
         if output[0] > par:
@@ -144,4 +143,9 @@ class CarAI (Car):
         elif output[3] > par:
             self.takeAction(Action.TurnLeft, dt)
         else:
-            self.takeAction(Action.GoStraight, dt)"""
+            self.takeAction(Action.GoStraight, dt)
+
+    def checkColliding(self, rect):
+        if(self.isColliding(rect, map)):
+            self.dead = True
+            
