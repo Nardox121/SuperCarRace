@@ -36,7 +36,7 @@ while True:
     gameMap.refresh(screen)
     rotated = pygame.transform.rotate(car_image, car.angle)
     rect = rotated.get_rect()
-    #car.collision(rect, gameMap.rectMap)
+    car.collision(rect, gameMap.map)
     
     screen.blit(rotated, car.position * 32 - (int(rect.width / 2), int(rect.height / 2)))
     #refresh window

@@ -2,6 +2,7 @@ import pygame, math
 from math import copysign
 from pygame.math import Vector2
 from enum import Enum
+from Map import MapTile
 
 class Car:
     def __init__(self, x, y, angle = 90, length = 0.5, max_steering = 15, max_acceleration= 2.5):
@@ -79,12 +80,13 @@ class Car:
         self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
         self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
 
-    # def collision(self, rect, map):
-    #     carRec = pygame.Rect(self.position.x * 32, self.position.y * 32, 5, 5)
-    #     if(carRec.collidelist(map) > -1):
-    #         self.position.x, self.position.y = self.startPosition.x, self.startPosition.y
-    #         self.angle = 90
-    #         self.velocity = Vector2(0.0, 0.0)
+    def collision(self, rect, map):
+        # print(self.position.x, self.position.y)
+        carRec = pygame.Rect(self.position.x * 32, self.position.y * 32, 5, 5)
+        topLeft, bottomLeft, topRight, bottomRight = carRec.topleft, carRec.bottomleft, carRec.topright, carRec.bottomright
+        if map[topLeft[0]][topLeft[1]] == MapTile.WALL or map[bottomLeft[0]][bottomLeft[1]] == MapTile.WALL or map[topRight[0]][topRight[1]] == MapTile.WALL or map[bottomRight[0]][bottomRight[1]] == MapTile.WALL:
+            self.position = Vector2(self.startPosition.x, self.startPosition.y)
+            self.angle = 90
 
 class Action(Enum):
     Accelerate = 1
