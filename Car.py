@@ -82,7 +82,7 @@ class Car:
 
     def collision(self, rect, map):
         # print(self.position.x, self.position.y)
-        carRec = pygame.Rect(self.position.y * 32, self.position.x * 32, 1, 1)
+        carRec = pygame.Rect(self.position.y * 32, self.position.x * 32, 5, 5)
         topLeft, bottomLeft, topRight, bottomRight = carRec.topleft, carRec.bottomleft, carRec.topright, carRec.bottomright
         if map[topLeft[0]][topLeft[1]] == MapTile.WALL or map[bottomLeft[0]][bottomLeft[1]] == MapTile.WALL or map[topRight[0]][topRight[1]] == MapTile.WALL or map[bottomRight[0]][bottomRight[1]] == MapTile.WALL:
             self.position = Vector2(self.startPosition.x, self.startPosition.y)

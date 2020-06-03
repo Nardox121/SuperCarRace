@@ -1,4 +1,4 @@
-from pygame import draw, Color, Rect, image, display
+from pygame import image
 from PIL import Image
 from enum import Enum
 

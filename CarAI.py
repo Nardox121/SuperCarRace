@@ -6,7 +6,7 @@ from Map import MapTile
 from pygame import draw,color
 
 class CarAI (Car):
-    def __init__(self,x,y,m, angle = -30, length = 0.5, max_steering = 15, max_acceleration= 2.5):
+    def __init__(self, x, y, m, angle = 90, length = 0.5, max_steering = 15, max_acceleration= 2.5):
         self.startPosition = Vector2(x, y)
         self.position = Vector2(self.startPosition.x, self.startPosition.y)
         self.velocity = Vector2(0.0, 0.0)
