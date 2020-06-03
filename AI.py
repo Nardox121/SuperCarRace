@@ -72,7 +72,6 @@ def eval_genomes(genomes, config):
             # OUTPUT -> [up, down, right, left]
             car.move(dt, output)
             car.update(dt)
-            car.update_dist(screen, gameMap.map)
             #print(ge[x].fitness)
 
         ##  v tu ma być dodawanie fitnessu tylko nie wiem za co v    
@@ -97,6 +96,7 @@ def eval_genomes(genomes, config):
                 rects.pop(cars.index(car))
                 cars.pop(cars.index(car))
             else:
+                car.update_dist(screen, gameMap.map)
                 rotated = pygame.transform.rotate(car_image, car.angle)
                 rects[cars.index(car)] = rotated.get_rect()
                 if(car.checkCollision(rect, gameMap.map)):
