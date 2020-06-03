@@ -80,16 +80,16 @@ class Car:
         self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
         self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
 
-    def isColliding(self, rect, gameMap):
+    def isColliding(self, rect, gameMap, item):
         # print(self.position.x, self.position.y)
         carRec = pygame.Rect(self.position.y * 32, self.position.x * 32, 5, 5)
         topLeft, bottomLeft, topRight, bottomRight = carRec.topleft, carRec.bottomleft, carRec.topright, carRec.bottomright
-        if gameMap[topLeft[0]][topLeft[1]] == MapTile.WALL or gameMap[bottomLeft[0]][bottomLeft[1]] == MapTile.WALL or gameMap[topRight[0]][topRight[1]] == MapTile.WALL or gameMap[bottomRight[0]][bottomRight[1]] == MapTile.WALL:
+        if gameMap[topLeft[0]][topLeft[1]] == item or gameMap[bottomLeft[0]][bottomLeft[1]] == item or gameMap[topRight[0]][topRight[1]] == item or gameMap[bottomRight[0]][bottomRight[1]] == item:
             return True
         return False
 
     def checkCollision(self, rect, map):
-        if(self.isColliding(rect, map)):
+        if(self.isColliding(rect, map, MapTile.WALL)):
             self.position = Vector2(self.startPosition.x, self.startPosition.y)
             self.angle = 90
 

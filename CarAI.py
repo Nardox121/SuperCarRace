@@ -32,7 +32,7 @@ class CarAI (Car):
             self.distances[i] = self.calculate_dist(a[i], self.angle+angles[i], screen, gameMap)
         for i in range(6):
             self.distances[i] = self.normalize(self.distances[i])
-        print(self.distances)
+        #print(self.distances)
 
     def calculate_dist(self, a, angle, screen, gameMap):
         if angle<0:
@@ -144,5 +144,12 @@ class CarAI (Car):
             self.takeAction(Action.GoStraight, dt)
 
     def checkCollision(self, rect, gameMap):
-        if(self.isColliding(rect, gameMap)):
+        if(self.isColliding(rect, gameMap, MapTile.WALL)):
             self.dead = True
+            return True
+        return False
+        
+    def isAwarded(self, rect, gameMap):
+        if(self.isColliding(rect, gameMap, MapTile.REWARD)):
+            return True
+        return False

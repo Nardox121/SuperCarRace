@@ -14,8 +14,9 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 ticks = 60
 
-path = "map.bmp"
-gameMap = Map(path)
+path = "assets/Map.bmp"
+path2 = "assets/RewardMap.bmp"
+gameMap = Map(path, path2)
 car = CarAI(4.5, 9)
 # car = Car(4.5, 9)
 car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
