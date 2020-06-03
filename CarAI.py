@@ -6,7 +6,7 @@ from Map import MapTile
 from pygame import draw,color
 
 class CarAI (Car):
-    def __init__(self, x, y, m, angle = 90, length = 0.5, max_steering = 15, max_acceleration= 2.5):
+    def __init__(self, x, y, angle = 89.9, length = 0.5, max_steering = 15, max_acceleration= 2.5):
         self.startPosition = Vector2(x, y)
         self.position = Vector2(self.startPosition.x, self.startPosition.y)
         self.velocity = Vector2(0.0, 0.0)
@@ -20,22 +20,21 @@ class CarAI (Car):
 
         self.acceleration = 0.0
         self.steering = 0.0
-        self.map = m
         self.distances = [0 for x in range(6)]
         self.dead = False
 
-    def update_dist(self, screen):
+    def update_dist(self, screen, gameMap):
         angles = [0, 45, -45, +90, -90, -180]
         a = [0]*6
         for i in range(6):
             a[i]=math.tan((self.angle+90+angles[i])/180*math.pi)
         for i in range(6):
-            self.distances[i] = self.calculate_dist(a[i], self.angle+angles[i], screen)
+            self.distances[i] = self.calculate_dist(a[i], self.angle+angles[i], screen, gameMap)
         for i in range(6):
             self.distances[i] = self.normalize(self.distances[i])
         print(self.distances)
 
-    def calculate_dist(self, a, angle, screen):
+    def calculate_dist(self, a, angle, screen, gameMap):
         if angle<0:
             angle+=1080
         if angle>=360:
@@ -56,14 +55,14 @@ class CarAI (Car):
             a=0.001
         if quarter == 1 and a<1:
             a=1/a
-            while x<len(self.map) and y<len(self.map[0]) and self.map[y][x]!=MapTile.WALL :
+            while x<len(gameMap) and y<len(gameMap[0]) and gameMap[y][x]!=MapTile.WALL :
                 x+=1
                 count+=1
                 y+=math.floor(count/a)
                 if count>=math.ceil(abs(a)):
                     count=0
         elif quarter == 1 and a>=1:
-            while x<len(self.map) and y<len(self.map) and self.map[y][x]!=MapTile.WALL :
+            while x<len(gameMap) and y<len(gameMap) and gameMap[y][x]!=MapTile.WALL :
                 x+=1
                 count+=1
                 y+=math.floor(count/a)
@@ -71,14 +70,14 @@ class CarAI (Car):
                     count=0
         elif quarter == 2 and a>-1:
             a=1/a
-            while x<len(self.map) and y>0 and self.map[y][x]!=MapTile.WALL :
+            while x<len(gameMap) and y>0 and gameMap[y][x]!=MapTile.WALL :
                 y-=1
                 count+=1
                 x-=math.ceil(count/a)
                 if count>math.ceil(abs(a)):
                     count=0
         elif quarter == 2 and a<=-1:
-            while x<len(self.map) and y>0 and self.map[y][x]!=MapTile.WALL :
+            while x<len(gameMap) and y>0 and gameMap[y][x]!=MapTile.WALL :
                 x+=1
                 count+=1
                 y+=math.ceil(count/a)
@@ -86,14 +85,14 @@ class CarAI (Car):
                     count=0
         elif quarter == 3 and a<1:
             a=1/a
-            while x>0 and y>0 and self.map[y][x]!=MapTile.WALL :
+            while x>0 and y>0 and gameMap[y][x]!=MapTile.WALL :
                 x-=1
                 count+=1
                 y-=math.floor(count/a)
                 if count>math.ceil(abs(a)):
                     count=0
         elif quarter == 3 and a>=1:
-            while x>0 and y>0 and self.map[y][x]!=MapTile.WALL :
+            while x>0 and y>0 and gameMap[y][x]!=MapTile.WALL :
                 x-=1
                 count+=1
                 y-=math.floor(count/a)
@@ -101,14 +100,14 @@ class CarAI (Car):
                     count=0
         elif quarter == 4 and a>-1:
             a=1/a
-            while y>0 and x<len(self.map[0]) and self.map[y][x]!=MapTile.WALL :
+            while y>0 and x<len(gameMap[0]) and gameMap[y][x]!=MapTile.WALL :
                 y+=1
                 count+=1
                 x-=math.ceil(count/a)
                 if count>math.ceil(abs(a)):
                     count=0
         elif quarter == 4 and a<=-1:
-            while x>0 and y<len(self.map[0]) and self.map[y][x]!=MapTile.WALL :
+            while x>0 and y<len(gameMap[0]) and gameMap[y][x]!=MapTile.WALL :
                 x-=1
                 count+=1
                 y-=math.ceil(count/a)
@@ -118,13 +117,11 @@ class CarAI (Car):
         return (math.sqrt((self.position.x*32-x)**2+(self.position.y*32-y)**2))
 
     def normalize(self, value):
-        val=value
-        if value<0:
-            val=0
-        if value>200:
-            val=200
-        val/=200
-        return val
+        if value < 0:
+            value = 0
+        if value > 200:
+            value = 200
+        return value / 200
     
 
     """def move(self, dt, output):
