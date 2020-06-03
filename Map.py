@@ -9,10 +9,8 @@ class Map:
         imageSizeW, imageSizeH = im.size
         print(im.getpixel((1, 1)))
         print(im.getpixel((100, 100)))
-        self.map = [[MapTile.ROAD if im.getpixel((i, j)) == (88, 88, 88) else MapTile.WALL for i in range(1, imageSizeW)] for j in range(1, imageSizeH)]
-        print(self.map[1][1])
-        print(self.map[100][100])
-            
+        self.map = [[MapTile.WALL if im.getpixel((i, j)) == (88, 88, 88) else MapTile.ROAD for i in range(0, imageSizeW)] for j in range(0, imageSizeH)]
+
     def refresh(self, screen):
         screen.blit(self.mapImage, [0,0])
 
