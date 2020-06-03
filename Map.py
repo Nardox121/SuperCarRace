@@ -7,8 +7,6 @@ class Map:
         im = Image.open(mapPath, "r") 
         self.mapImage = image.load(mapPath).convert()
         imageSizeW, imageSizeH = im.size
-        print(im.getpixel((1, 1)))
-        print(im.getpixel((100, 100)))
         self.map = [[MapTile.WALL if im.getpixel((i, j)) == (88, 88, 88) else MapTile.ROAD for i in range(0, imageSizeW)] for j in range(0, imageSizeH)]
 
     def refresh(self, screen):

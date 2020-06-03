@@ -16,7 +16,7 @@ ticks = 60
 
 path = "map.bmp"
 gameMap = Map(path)
-car = Car(4.5, 9)
+car = CarAI(4.5, 9, gameMap.map)
 car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
 
 while True:
@@ -31,9 +31,9 @@ while True:
     car.move(dt, pressed)
     
     car.update(dt)
-    #car.update_dist()
     
     gameMap.refresh(screen)
+    car.update_dist(screen)
     rotated = pygame.transform.rotate(car_image, car.angle)
     rect = rotated.get_rect()
     car.collision(rect, gameMap.map)
