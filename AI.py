@@ -18,8 +18,8 @@ def eval_genomes(genomes, config):
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((width, height))
     ticks = 60
-    path1 = "assets/Map3.bmp"
-    path2 = "assets/RewardMap3.bmp"
+    path1 = "assets/Map.bmp"
+    path2 = "assets/RewardMap.bmp"
     gameMap = Map(path1, path2)
 
     car_image = pygame.transform.scale(pygame.image.load("assets/Car2.png"), (28, 16))
@@ -33,7 +33,7 @@ def eval_genomes(genomes, config):
     ge = []
 
     for genome_id, genome in genomes:
-        genome.fitness = 0  # start with fitness level of 0
+        genome.fitness = 50  # start with fitness level of 0
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         nets.append(net)
         cars.append(CarAI(3.5, 10))
@@ -43,7 +43,6 @@ def eval_genomes(genomes, config):
         
 
     clock = pygame.time.Clock()
-
     run = True
     while run and len(cars) > 0:
         clock.tick(ticks)
@@ -62,7 +61,9 @@ def eval_genomes(genomes, config):
             #output to tablica z 4 wyjściami który klawisz kliknąć
             output = nets[cars.index(car)].activate((car.distances + [car.velocity.x ,car.velocity.y]))
             
-        #### v odejmowanie punktów za stanie w miejscu lol v ####
+            if abs(car.velocity.x)<0.9:
+                ge[x].fitness -= 3.1
+
             if output < [0.5, 0.5, 0.5, 0.5]:
                 ge[x].fitness -= 10
             
@@ -79,7 +80,7 @@ def eval_genomes(genomes, config):
         '''
         ##  v zabijanie nierobów v  ##
         for genome in ge:
-            if genome.fitness < -10:
+            if genome.fitness < -25:
                 cars[ge.index(genome)].dead = True
 
         ##  v tu ma być całe rysowanie mapy v
