@@ -22,11 +22,11 @@ def eval_genomes(genomes, config):
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((width, height))
     ticks = 60
-    path1 = "assets/Map.bmp"
-    path2 = "assets/RewardMap.bmp"
+    path1 = "assets/Map3.bmp"
+    path2 = "assets/RewardMap3.bmp"
     gameMap = Map(path1, path2)
 
-    car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
+    car_image = pygame.transform.scale(pygame.image.load("assets/Car2.png"), (28, 16))
     
     # start by creating lists holding the genome itself, the
     # neural network associated with the genome and the
@@ -40,7 +40,7 @@ def eval_genomes(genomes, config):
         genome.fitness = 0  # start with fitness level of 0
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         nets.append(net)
-        cars.append(CarAI(4.5, 9))
+        cars.append(CarAI(3.5, 10))
         rotated = pygame.transform.rotate(car_image, cars[0].angle)
         rects.append(rotated.get_rect())
         ge.append(genome)
@@ -60,8 +60,9 @@ def eval_genomes(genomes, config):
                 quit()
                 breakpoint
 
-        for x, car in enumerate(cars):  # give each car a fitness of 0.1 for each frame it stays alive
-            ge[x].fitness += 0.1
+        for x, car in enumerate(cars):  
+            # odejmowanie za życie 
+            ge[x].fitness -= 0.01
             #output to tablica z 4 wyjściami który klawisz kliknąć
             output = nets[cars.index(car)].activate((car.distances + [car.velocity.x ,car.velocity.y]))
             
@@ -84,8 +85,6 @@ def eval_genomes(genomes, config):
         for genome in ge:
             if genome.fitness < -10:
                 cars[ge.index(genome)].dead = True
-            else:
-                genome.fitness += 0.1
 
         ##  v tu ma być całe rysowanie mapy v
         gameMap.refresh(screen)
@@ -100,7 +99,7 @@ def eval_genomes(genomes, config):
                 rotated = pygame.transform.rotate(car_image, car.angle)
                 rects[cars.index(car)] = rotated.get_rect()
                 if(car.checkCollision(rect, gameMap.map)):
-                    ge[cars.index(car)].fitness -= 3
+                    ge[cars.index(car)].fitness -= 15
                 elif(car.isAwarded(rect,gameMap.map)):
                     ge[cars.index(car)].fitness += 2
                 screen.blit(rotated, car.position * 32 - (int(rect.width / 2), int(rect.height / 2)))   
@@ -135,7 +134,7 @@ def run(config_file):
     #p.add_reporter(neat.Checkpointer(5))
 
     # Run for up to 50 generations.
-    winner = p.run(eval_genomes, 50)
+    winner = p.run(eval_genomes, 1000)
     #stats.save("result.txt")
     # show final stats
     print('\nBest genome:\n{!s}'.format(winner))
