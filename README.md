@@ -14,3 +14,7 @@ All of the configuration can be found in *assets/config.txt* and *AI.py* files
 [Pygame](https://github.com/pygame/)
 
 [NEAT-Python](https://github.com/CodeReclaimers/neat-python)
+
+```
+pip install -r requirements.txt
+```
