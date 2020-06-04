@@ -15,4 +15,4 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 ticks = 60
 
-run("assets/config.txt")
+winner_net = run("assets/config.txt")

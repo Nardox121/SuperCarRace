@@ -1,17 +1,56 @@
-import random
-import os
-import time
-import neat
 import pygame
 import sys
 from math import copysign
 from Car import Car
 from CarAI import CarAI
 from Map import Map
-import pickle
+import neat
 
-def eval_genomes(genomes, config):
-    
+
+def withoutAI():
+    width = 1024
+    height = 600
+    pygame.display.set_caption("SuperCarRace")
+    pygame.init()
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode((width, height))
+    clock = pygame.time.Clock()
+    ticks = 60
+
+    path = "assets/Map.bmp"
+    path2 = "assets/RewardMap.bmp"
+    gameMap = Map(path, path2)
+    #car = CarAI(4.5, 9)
+    car = Car(4.5, 9)
+    car_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
+
+    while True:
+        dt = clock.get_time() / 300
+        gameMap.refresh(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+        pressed = pygame.key.get_pressed()
+
+        car.move(dt, pressed)
+        car.update(dt)
+        
+        gameMap.refresh(screen)
+        #car.update_dist(screen, gameMap.map)
+        rotated = pygame.transform.rotate(car_image, car.angle)
+        rect = rotated.get_rect()
+        car.checkCollision(rect, gameMap.map)
+        screen.blit(rotated, car.position * 32 - (int(rect.width / 2), int(rect.height / 2)))
+        
+        #refresh window
+        pygame.display.flip()
+        clock.tick(ticks)
+
+
+
+def withAI(genomes, config):
     width = 1024
     height = 600
     pygame.init()
@@ -23,6 +62,7 @@ def eval_genomes(genomes, config):
     gameMap = Map(path1, path2)
 
     car_image = pygame.transform.scale(pygame.image.load("assets/Car2.png"), (28, 16))
+    player_image = pygame.transform.scale(pygame.image.load("assets/Car.png"), (28, 16))
     
     # start by creating lists holding the genome itself, the
     # neural network associated with the genome and the
@@ -31,6 +71,8 @@ def eval_genomes(genomes, config):
     cars = []
     rects = []
     ge = []
+
+    player = Car(3, 10)
 
     for genome_id, genome in genomes:
         genome.fitness = 0  # start with fitness level of 0
@@ -57,30 +99,13 @@ def eval_genomes(genomes, config):
                 breakpoint
 
         for x, car in enumerate(cars):  
-            # odejmowanie za życie 
-            ge[x].fitness -= 0.01
             #output to tablica z 4 wyjściami który klawisz kliknąć
             output = nets[cars.index(car)].activate((car.distances + [car.velocity.x ,car.velocity.y]))
-            
-        #### v odejmowanie punktów za stanie w miejscu lol v ####
-            if output < [0.5, 0.5, 0.5, 0.5]:
-                ge[x].fitness -= 10
             
             # OUTPUT -> [up, down, right, left]
             car.move(dt, output)
             car.update(dt)
             #print(ge[x].fitness)
-
-        ##  v tu ma być dodawanie fitnessu tylko nie wiem za co v    
-        '''if True:
-            # can add this line to give more reward for passing through a pipe (not required)
-            for genome in ge:
-                genome.fitness += 5
-        '''
-        ##  v zabijanie nierobów v  ##
-        for genome in ge:
-            if genome.fitness < -10:
-                cars[ge.index(genome)].dead = True
 
         ##  v tu ma być całe rysowanie mapy v
         gameMap.refresh(screen)
@@ -94,31 +119,22 @@ def eval_genomes(genomes, config):
                 car.update_dist(screen, gameMap.map)
                 rotated = pygame.transform.rotate(car_image, car.angle)
                 rects[cars.index(car)] = rotated.get_rect()
-                if(car.checkCollision(rect, gameMap.map)):
-                    ge[cars.index(car)].fitness -= 15
-                elif(car.isAwarded(rect,gameMap.map)):
-                    ge[cars.index(car)].fitness += 9
+                car.checkCollision(rect, gameMap.map)
+                car.isAwarded(rect,gameMap.map)
                 screen.blit(rotated, car.position * 32 - (int(rect.width / 2), int(rect.height / 2)))   
+        
+        # v rysowanie playera v # 
+        pressed = pygame.key.get_pressed()
+
+        player.move(dt, pressed)
+        player.update(dt)
+        
+        rotated_player = pygame.transform.rotate(player_image, player.angle)
+        rect_player = rotated_player.get_rect()
+        player.checkCollision(rect_player, gameMap.map)
+        screen.blit(rotated_player, player.position * 32 - (int(rect_player.width / 2), int(rect_player.height / 2)))   
 
         #refresh window
         pygame.display.flip()
         clock.tick(ticks)
 
-def run(config_file):
-    config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
-                         neat.DefaultSpeciesSet, neat.DefaultStagnation,
-                         config_file)
-
-    # Create the population, which is the top-level object for a NEAT run.
-    p = neat.Population(config)
-
-    # Add a stdout reporter to show progress in the terminal.
-    p.add_reporter(neat.StdOutReporter(True))
-    stats = neat.StatisticsReporter()
-    p.add_reporter(stats)
-
-    # Run for up to 50 generations.
-    generations = 50
-    winner = p.run(eval_genomes, generations)
-    with open('winner.pkl', 'wb') as output:    pickle.dump(winner, output, 1)
-    
