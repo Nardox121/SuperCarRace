@@ -55,14 +55,14 @@ class CarAI (Car):
             a=0.001
         if quarter == 1 and a<1:
             a=1/a
-            while x<len(gameMap) and y<len(gameMap[0]) and gameMap[y][x]!=MapTile.WALL :
+            while gameMap[y][x]!=MapTile.WALL :
                 x+=1
                 count+=1
                 y+=math.floor(count/a)
                 if count>=math.ceil(abs(a)):
                     count=0
         elif quarter == 1 and a>=1:
-            while x<len(gameMap) and y<len(gameMap) and gameMap[y][x]!=MapTile.WALL :
+            while gameMap[y][x]!=MapTile.WALL :
                 x+=1
                 count+=1
                 y+=math.floor(count/a)
@@ -70,14 +70,14 @@ class CarAI (Car):
                     count=0
         elif quarter == 2 and a>-1:
             a=1/a
-            while x<len(gameMap) and y>0 and gameMap[y][x]!=MapTile.WALL :
+            while gameMap[y][x]!=MapTile.WALL :
                 y-=1
                 count+=1
                 x-=math.ceil(count/a)
                 if count>math.ceil(abs(a)):
                     count=0
         elif quarter == 2 and a<=-1:
-            while x<len(gameMap) and y>0 and gameMap[y][x]!=MapTile.WALL :
+            while gameMap[y][x]!=MapTile.WALL :
                 x+=1
                 count+=1
                 y+=math.ceil(count/a)
@@ -85,14 +85,14 @@ class CarAI (Car):
                     count=0
         elif quarter == 3 and a<1:
             a=1/a
-            while x>0 and y>0 and gameMap[y][x]!=MapTile.WALL :
+            while gameMap[y][x]!=MapTile.WALL :
                 x-=1
                 count+=1
                 y-=math.floor(count/a)
                 if count>math.ceil(abs(a)):
                     count=0
         elif quarter == 3 and a>=1:
-            while x>0 and y>0 and gameMap[y][x]!=MapTile.WALL :
+            while gameMap[y][x]!=MapTile.WALL :
                 x-=1
                 count+=1
                 y-=math.floor(count/a)
@@ -100,14 +100,14 @@ class CarAI (Car):
                     count=0
         elif quarter == 4 and a>-1:
             a=1/a
-            while y>0 and x<len(gameMap[0]) and gameMap[y][x]!=MapTile.WALL :
+            while gameMap[y][x]!=MapTile.WALL :
                 y+=1
                 count+=1
                 x-=math.ceil(count/a)
                 if count>math.ceil(abs(a)):
                     count=0
         elif quarter == 4 and a<=-1:
-            while x>0 and y<len(gameMap[0]) and gameMap[y][x]!=MapTile.WALL :
+            while gameMap[y][x]!=MapTile.WALL :
                 x-=1
                 count+=1
                 y-=math.ceil(count/a)
@@ -123,7 +123,6 @@ class CarAI (Car):
             value = 200
         return value / 200
     
-
     def move(self, dt, output):
         par = 0.5
         ######### UP #############
@@ -142,7 +141,7 @@ class CarAI (Car):
             self.takeAction(Action.TurnLeft, dt)
         else:
             self.takeAction(Action.GoStraight, dt)
-
+            
     def checkCollision(self, rect, gameMap):
         if(self.isColliding(rect, gameMap, MapTile.WALL)):
             self.dead = True
